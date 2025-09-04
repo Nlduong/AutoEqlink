@@ -73,53 +73,8 @@ namespace AutoEqlink
 
                             ADBHelper.ScreenShoot(device, false, "front.jpg");
                             lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "screen shot Front"));
-                            //lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Chụp hình lần 1"));
-                            //ADBHelper.Swipe(device, 600, 650, 600, 400, 300);
-                            //lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll xuống lần 1"));
-                            ////delay(1);
-                            //ADBHelper.Swipe(device, 600, 650, 600, 400, 300);
-                            //lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll xuống lần 2"));
-                            ////delay(1);
-                            //ADBHelper.Swipe(device, 600, 650, 600, 400, 300);
-                            //lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll xuống lần 3"));
-                            ////delay(1);
-                            //if (totalhosre > 12 && totalhosre < 15)
-                            //{
-                            //    ADBHelper.Swipe(device, 600, 650, 600, 400, 300);
-                            //    lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll xuống lần 4"));
-                            //}
-                            //if (totalhosre > 14 && totalhosre < 20)
-                            //{
-                            //    ADBHelper.Swipe(device, 600, 650, 600, 400, 300);
-                            //    lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll xuống lần 4"));
-                            //    ADBHelper.Swipe(device, 600, 650, 600, 400, 300);
-                            //    lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll xuống lần 5"));
-                            //}
-
-                            //ADBHelper.ScreenShoot(device, false, "end.jpg");
-                            //lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Chụp hình lần 2"));
-                            //delay(1);
-                            //ADBHelper.Swipe(device, 600, 400, 600, 650, 300);
-                            //lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll lên lần 1"));
-                            ////delay(1);
-                            //ADBHelper.Swipe(device, 600, 400, 600, 650, 300);
-                            //lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll lên lần 2"));
-                            ////delay(1);
-                            //ADBHelper.Swipe(device, 600, 400, 600, 650, 300);
-                            //lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll lên lần 3"));
-                            //if (totalhosre > 12 && totalhosre < 15)
-                            //{
-                            //    ADBHelper.Swipe(device, 600, 400, 600, 650, 300);
-                            //    lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll lên lần 4"));
-                            //}
-                            //if (totalhosre > 14 && totalhosre < 20)
-                            //{
-                            //    ADBHelper.Swipe(device, 600, 400, 600, 650, 300);
-                            //    lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll lên lần 4"));
-                            //    ADBHelper.Swipe(device, 600, 400, 600, 650, 300);
-                            //    lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "Scroll lên lần 5"));
-                            //}
-                            delay(1);
+                           
+                            delay(3);
                         }
                     });
 
@@ -180,7 +135,7 @@ namespace AutoEqlink
             try
             {
                 // Crop vùng màu đỏ (tọa độ x, y, width, height)
-                Rectangle cropArea = new Rectangle(620, 400, 270, 1100);
+                Rectangle cropArea = new Rectangle(1850, 650, 300, 3100);
                 // 👉 bạn tự chỉnh lại cho đúng với vùng đỏ
 
                 if(imagePath == "./InputImage/end.jpg")
@@ -287,8 +242,7 @@ namespace AutoEqlink
                         
                         string imageFrontPath = "./InputImage/front.jpg"; ; // ảnh gốc
                         var listFront = GetImageToText(imageFrontPath);
-                        string imageEndPath = "./InputImage/end.jpg"; ; // ảnh gốc
-                        var listEnd = GetImageToText(imageEndPath);
+                       
                         List<LiveTote> _liveTote = new List<LiveTote>();
                         int totalHorse = int.Parse(txtTotalHorse.Text);
                         if (listFront.Count == 0)
@@ -298,13 +252,13 @@ namespace AutoEqlink
                         var merged = new List<Odds>();
                         if (chkLDPlayer3.Checked)
                         {
-                            string imageEnd_1Path = "./InputImage/end_final.jpg"; ; // ảnh gốc
-                            var listEnd_final = GetImageToText(imageEnd_1Path);
-                             merged = MergeOdds(listFront, listEnd, listEnd_final, totalHorse);
+                            string imageEndPath = "./InputImage/end.jpg"; ; // ảnh gốc
+                            var listEnd = GetImageToText(imageEndPath);                           
+                            merged = MergeOdds(listFront, listEnd,  totalHorse);
                         }
                         else
                         {
-                             merged = MergeOdds(listFront, listEnd, new List<Odds>(), totalHorse);
+                             merged = MergeOdds(listFront, new List<Odds>(), totalHorse);
                         }
                         
                         for (int i = 0; i < merged.Count; i++)
@@ -326,14 +280,18 @@ namespace AutoEqlink
                             item.RaceCountry = txtRC2.Text;
                             item.RaceCard = txtRC2.Text + item.RaceDay;
                             item.txday = item.RaceDay;
-                            item.Win = (item.Win != "SCR") ? ((float.Parse(item.Win) >= 999 || item.Win == "0") ? "999" : ParseWinPlace(item.Win)) : "-1";
-                            item.Place = (item.Place != "SCR") ? ((float.Parse(item.Place) >= 999 || item.Place == "0") ? "999" : ParseWinPlace(item.Place)) : "-1";
+                            item.Win = (item.Win != "-1") ? ((float.Parse(item.Win) >= 999 || item.Win == "0") ? "999" : ParseWinPlace(item.Win)) : "-1";
+                            item.Place = (item.Place != "-1") ? ((float.Parse(item.Place) >= 999 || item.Place == "0") ? "999" : ParseWinPlace(item.Place)) : "-1";
                             ///lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + "-Place: " + item.Place));
                             //delay(1);
                         }
                         lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "Save data to livetote"));
-                        delay(1);
-                        dal.SaveLiveToteList(listtest);
+                        delay(2);
+                        if (listtest.Count >0)
+                        {
+                            dal.SaveLiveToteList(listtest);
+                        }
+                        
                     }
                 });
                 t.Start();
@@ -345,20 +303,31 @@ namespace AutoEqlink
                 isStopCap = true;
             }
         }
-        public static List<Odds> MergeOdds(List<Odds> list1, List<Odds> list2, List<Odds> list3, int total)
+        public static List<Odds> MergeOdds(List<Odds> list1, List<Odds> list2, int total)
         {
             var result = new List<Odds>(capacity: total);
 
-            if (list3.Count == 0)
+            if (list2.Count == 0)
             {
                 for (int i = 0; i < list1.Count; i++)
                 {
-                    if (list1.Count <= total)
+                    if (i < total)
                     {
                         string win = list1[i].Win;
                         string place = list1[i].Place;
                         result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
                     }
+                }
+
+            }
+            else
+            {
+                for (int i = 0; i < list1.Count; i++)
+                {
+                   
+                        string win = list1[i].Win;
+                        string place = list1[i].Place;
+                        result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
                 }
 
                 for (int j = 0; j < total - (list1.Count); j++)
@@ -370,38 +339,8 @@ namespace AutoEqlink
                     result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
                 }
             }
-            else
-            {
-                for (int i = 0; i < 7; i++)
-                {
-                    if (list1.Count <= total)
-                    {
-                        string win = list1[i].Win;
-                        string place = list1[i].Place;
-                        result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
-                    }
-                }
 
-                for (int j = 0; j < 7; j++)
-
-
-                {
-                    int index =  j;
-                    string win = list2[index].Win;
-                    string place = list2[index].Place;
-                    result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
-                }
-                for (int k = 0; k < total - 14; k++)
-
-                {
-                    int index = list3.Count - (total - 14) + k;
-                    string win = list3[index].Win;
-                    string place = list3[index].Place;
-                    result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
-                }
-            }
-
-                return result;
+             return result;
         }
 
         private static bool IsScr(string s)
