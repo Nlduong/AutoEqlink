@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://tempuri.org/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="HelloWorld">
+        <s:complexType />
+      </s:element>
+      <s:element name="HelloWorldResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="HelloWorldResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsDataReady">
+        <s:complexType />
+      </s:element>
+      <s:element name="IsDataReadyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsDataReadyResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getListCountry">
+        <s:complexType />
+      </s:element>
+      <s:element name="getListCountryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getListCountryResult" type="tns:ArrayOfCountry" />
+            <s:element minOccurs="0" maxOccurs="1" name="lstF" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCountry">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="country" nillable="true" type="tns:country" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="country">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CountryCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShowHorseInfo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Flag" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UpdateCountry">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ct" type="tns:country" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateCountryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateCountryResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveLiveToteList1">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lst" type="tns:ArrayOfLiveTote" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfLiveTote">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LiveTote" nillable="true" type="tns:LiveTote" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LiveTote">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="rowid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RaceCard" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RaceCountry" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RaceDay" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RaceBoard" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RaceCountryOdds" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RaceNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Win" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Place" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="txday" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="events" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="info" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tstamp" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SaveLiveToteList1Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SaveLiveToteList1Result" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveSoccerResult">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lst" type="tns:ArrayOfEventResult" />
+            <s:element minOccurs="0" maxOccurs="1" name="lang" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfEventResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EventResult" nillable="true" type="tns:EventResult" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EventResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ID_Event" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="txtday" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name_en" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="listteam" type="tns:ArrayOfTeamResult" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTeamResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TeamResult" nillable="true" type="tns:TeamResult" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TeamResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="teamA" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="teamB" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="teamTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FirstHalf" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fulltime" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SaveSoccerResultResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SaveSoccerResultResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveLiveToteList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lst" type="tns:ArrayOfLiveTote" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SaveLiveToteListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SaveLiveToteListResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendMessage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="msg" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendMessageResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="UpdateRaceInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ri" type="tns:RaceInfo" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RaceInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="RaceID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="rowid" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="RaceCard" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RaceCountry" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="items2en" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="items2cn" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UpdateRaceInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UpdateRaceInfoResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="HelloWorldSoapIn">
+    <wsdl:part name="parameters" element="tns:HelloWorld" />
+  </wsdl:message>
+  <wsdl:message name="HelloWorldSoapOut">
+    <wsdl:part name="parameters" element="tns:HelloWorldResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsDataReadySoapIn">
+    <wsdl:part name="parameters" element="tns:IsDataReady" />
+  </wsdl:message>
+  <wsdl:message name="IsDataReadySoapOut">
+    <wsdl:part name="parameters" element="tns:IsDataReadyResponse" />
+  </wsdl:message>
+  <wsdl:message name="getListCountrySoapIn">
+    <wsdl:part name="parameters" element="tns:getListCountry" />
+  </wsdl:message>
+  <wsdl:message name="getListCountrySoapOut">
+    <wsdl:part name="parameters" element="tns:getListCountryResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateCountrySoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateCountry" />
+  </wsdl:message>
+  <wsdl:message name="UpdateCountrySoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateCountryResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveLiveToteList1SoapIn">
+    <wsdl:part name="parameters" element="tns:SaveLiveToteList1" />
+  </wsdl:message>
+  <wsdl:message name="SaveLiveToteList1SoapOut">
+    <wsdl:part name="parameters" element="tns:SaveLiveToteList1Response" />
+  </wsdl:message>
+  <wsdl:message name="SaveSoccerResultSoapIn">
+    <wsdl:part name="parameters" element="tns:SaveSoccerResult" />
+  </wsdl:message>
+  <wsdl:message name="SaveSoccerResultSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveSoccerResultResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveLiveToteListSoapIn">
+    <wsdl:part name="parameters" element="tns:SaveLiveToteList" />
+  </wsdl:message>
+  <wsdl:message name="SaveLiveToteListSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveLiveToteListResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendMessageSoapIn">
+    <wsdl:part name="parameters" element="tns:SendMessage" />
+  </wsdl:message>
+  <wsdl:message name="SendMessageSoapOut">
+    <wsdl:part name="parameters" element="tns:SendMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateRaceInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateRaceInfo" />
+  </wsdl:message>
+  <wsdl:message name="UpdateRaceInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateRaceInfoResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ACWSSoap">
+    <wsdl:operation name="HelloWorld">
+      <wsdl:input message="tns:HelloWorldSoapIn" />
+      <wsdl:output message="tns:HelloWorldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsDataReady">
+      <wsdl:input message="tns:IsDataReadySoapIn" />
+      <wsdl:output message="tns:IsDataReadySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getListCountry">
+      <wsdl:input message="tns:getListCountrySoapIn" />
+      <wsdl:output message="tns:getListCountrySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCountry">
+      <wsdl:input message="tns:UpdateCountrySoapIn" />
+      <wsdl:output message="tns:UpdateCountrySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveLiveToteList1">
+      <wsdl:input message="tns:SaveLiveToteList1SoapIn" />
+      <wsdl:output message="tns:SaveLiveToteList1SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveSoccerResult">
+      <wsdl:input message="tns:SaveSoccerResultSoapIn" />
+      <wsdl:output message="tns:SaveSoccerResultSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveLiveToteList">
+      <wsdl:input message="tns:SaveLiveToteListSoapIn" />
+      <wsdl:output message="tns:SaveLiveToteListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <wsdl:input message="tns:SendMessageSoapIn" />
+      <wsdl:output message="tns:SendMessageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRaceInfo">
+      <wsdl:input message="tns:UpdateRaceInfoSoapIn" />
+      <wsdl:output message="tns:UpdateRaceInfoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ACWSSoap" type="tns:ACWSSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HelloWorld">
+      <soap:operation soapAction="http://tempuri.org/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsDataReady">
+      <soap:operation soapAction="http://tempuri.org/IsDataReady" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getListCountry">
+      <soap:operation soapAction="http://tempuri.org/getListCountry" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCountry">
+      <soap:operation soapAction="http://tempuri.org/UpdateCountry" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveLiveToteList1">
+      <soap:operation soapAction="http://tempuri.org/SaveLiveToteList1" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveSoccerResult">
+      <soap:operation soapAction="http://tempuri.org/SaveSoccerResult" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveLiveToteList">
+      <soap:operation soapAction="http://tempuri.org/SaveLiveToteList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <soap:operation soapAction="http://tempuri.org/SendMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRaceInfo">
+      <soap:operation soapAction="http://tempuri.org/UpdateRaceInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ACWSSoap12" type="tns:ACWSSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="HelloWorld">
+      <soap12:operation soapAction="http://tempuri.org/HelloWorld" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsDataReady">
+      <soap12:operation soapAction="http://tempuri.org/IsDataReady" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getListCountry">
+      <soap12:operation soapAction="http://tempuri.org/getListCountry" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateCountry">
+      <soap12:operation soapAction="http://tempuri.org/UpdateCountry" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveLiveToteList1">
+      <soap12:operation soapAction="http://tempuri.org/SaveLiveToteList1" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveSoccerResult">
+      <soap12:operation soapAction="http://tempuri.org/SaveSoccerResult" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveLiveToteList">
+      <soap12:operation soapAction="http://tempuri.org/SaveLiveToteList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <soap12:operation soapAction="http://tempuri.org/SendMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRaceInfo">
+      <soap12:operation soapAction="http://tempuri.org/UpdateRaceInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ACWS">
+    <wsdl:port name="ACWSSoap" binding="tns:ACWSSoap">
+      <soap:address location="http://localhost:41534/ACWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ACWSSoap12" binding="tns:ACWSSoap12">
+      <soap12:address location="http://localhost:41534/ACWS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
