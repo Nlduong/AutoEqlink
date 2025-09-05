@@ -135,7 +135,7 @@ namespace AutoEqlink
             try
             {
                 // Crop vùng màu đỏ (tọa độ x, y, width, height)
-                Rectangle cropArea = new Rectangle(1850, 650, 300, 3100);
+                Rectangle cropArea = new Rectangle(1850, 250, 300, 3100);
                 // 👉 bạn tự chỉnh lại cho đúng với vùng đỏ
 
                 if(imagePath == "./InputImage/end.jpg")
@@ -181,10 +181,7 @@ namespace AutoEqlink
                             odds.Add(new Odds { Win = win.ToString(), Place = place.ToString() });
 
                         }
-                        else
-                        {
-                            odds.Add(new Odds { Win = win.ToString(), Place = "0" });
-                        }
+                       
                     }
                     else
                     {
