@@ -135,7 +135,7 @@ namespace AutoEqlink
             try
             {
                 // Crop vùng màu đỏ (tọa độ x, y, width, height)
-                Rectangle cropArea = new Rectangle(1850, 250, 300, 3100);
+                Rectangle cropArea = new Rectangle(1850, 250, 300, 3400);
                 // 👉 bạn tự chỉnh lại cho đúng với vùng đỏ
 
                 if(imagePath == "./InputImage/end.jpg")
@@ -165,14 +165,15 @@ namespace AutoEqlink
                 {
                     string trimmed = line.Trim();
                     if (trimmed.Equals("Scratched", StringComparison.OrdinalIgnoreCase))
-                    {
+                    {                     
                         string win = "SCR";
-                        string place = "SCR";
+                        string place = "SCR";                       
                         odds.Add(new Odds { Win = win, Place = place });
                     }
-                        
+                  
 
-                    string[] parts = trimmed.Split(' ', (char)StringSplitOptions.RemoveEmptyEntries);
+
+                     string[] parts = trimmed.Split(' ', (char)StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
                         if (double.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double win) &&
@@ -181,7 +182,21 @@ namespace AutoEqlink
                             odds.Add(new Odds { Win = win.ToString(), Place = place.ToString() });
 
                         }
-                       
+                        else if (double.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double win1) && parts[1] == "-")
+                        {
+                            odds.Add(new Odds { Win = win1.ToString(), Place = "0" });
+
+                        }
+                        else if (double.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double place1) &&  parts[0] == "-")
+                        {
+                            odds.Add(new Odds { Win = "0", Place = place1.ToString() });
+
+                        }
+                        else if (double.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double win2) && parts[1] == "=")
+                        {
+                            odds.Add(new Odds { Win = win2.ToString(), Place = "0" });
+
+                        }
                     }
                     else
                     {
