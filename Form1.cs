@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -130,12 +131,11 @@ namespace AutoEqlink
 
         }
         private List<Odds> GetImageToText(string imagePath)
-        {
-           
+        {           
             try
             {
                 // Crop vùng màu đỏ (tọa độ x, y, width, height)
-                Rectangle cropArea = new Rectangle(1850, 250, 300, 3400);
+                Rectangle cropArea = new Rectangle(1800, 250, 350, 3400);
                 // 👉 bạn tự chỉnh lại cho đúng với vùng đỏ
 
                 if(imagePath == "./InputImage/end.jpg")
@@ -152,13 +152,14 @@ namespace AutoEqlink
                 // Lưu ảnh crop ra file mới (PNG hoặc JPG tuỳ chọn)
                 string savePath = @"InputImage\cropped1.png";
                 cropped.Save(savePath);
-                // OCR bằng Tesseract
-
+             
+                Bitmap pre = Preprocess(cropped);
+                //pre.Save("./InputImage/debug_after.png"); // để xem thử ảnh đã xử lý
+             
                 string tessPath = @"./tessdata";  // thư mục chứa tessdata
                 var ocr = new TesseractEngine(tessPath, "eng", EngineMode.Default);
-                var page = ocr.Process(cropped);
-
-                string rawData = page.GetText();
+                var page = ocr.Process(pre);
+                string rawData = page.GetText(); 
                 List<Odds> odds = new List<Odds>();
 
                 foreach (string line in rawData.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
@@ -217,19 +218,20 @@ namespace AutoEqlink
                 Console.WriteLine(ex.ToString());
                 return null;
             }
-        }
+        }  
         bool isStopCap = false;
         private void btnCapture_Click(object sender, EventArgs e)
         {
-            Task t = new Task(() =>
-            {
-                CaputerData();
-            });
+           
             if (clickRun1 == false)
             {
                 btnCapture.Text = "Run Capture";
                 clickRun1 = true;
                 isStopCap = false;
+                Task t = new Task(() =>
+                {
+                    CaputerData();
+                });
                 t.Start();
             }
             else
@@ -396,6 +398,46 @@ namespace AutoEqlink
 
             // Trường hợp OCR đọc ra dấu "-" hay ký tự lạ thì trả về -1
             return "-1";
+        }
+
+        public static Bitmap Preprocess(Bitmap src)
+        {
+            Bitmap gray = new Bitmap(src.Width, src.Height);
+
+            // Chuyển grayscale
+            using (Graphics g = Graphics.FromImage(gray))
+            {
+                var colorMatrix = new System.Drawing.Imaging.ColorMatrix(
+                    new float[][]
+                    {
+                new float[] {0.3f, 0.3f, 0.3f, 0, 0},
+                new float[] {0.59f,0.59f,0.59f,0,0},
+                new float[] {0.11f,0.11f,0.11f,0,0},
+                new float[] {0,0,0,1,0},
+                new float[] {0,0,0,0,1}
+                    });
+
+                var attrs = new ImageAttributes();
+                attrs.SetColorMatrix(colorMatrix);
+
+                g.DrawImage(src, new Rectangle(0, 0, src.Width, src.Height),
+                    0, 0, src.Width, src.Height,
+                    GraphicsUnit.Pixel, attrs);
+            }
+
+            // Áp dụng threshold (biến thành đen trắng)
+            for (int y = 0; y < gray.Height; y++)
+            {
+                for (int x = 0; x < gray.Width; x++)
+                {
+                    Color c = gray.GetPixel(x, y);
+                    int l = (c.R + c.G + c.B) / 3;
+                    if (l > 160) gray.SetPixel(x, y, Color.White);
+                    else gray.SetPixel(x, y, Color.Black);
+                }
+            }
+
+            return gray;
         }
     }
 }
