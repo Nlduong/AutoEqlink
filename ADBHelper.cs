@@ -298,7 +298,7 @@ namespace AutoEqlink
                 }
             }
 
-            string text3 = Directory.GetCurrentDirectory() +  text2;
+            string text3 = Directory.GetCurrentDirectory() + "\\InputImage\\" +text2;
             string text4 = Directory.GetCurrentDirectory() + "\\InputImage";
             text4= text4.Replace("\\\\", "\\");
             text4 = "\"" + text4 + "\"";

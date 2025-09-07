@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -58,6 +60,36 @@ namespace AutoEqlink
             }
            
         }
+        static void CaptureScreen(string filePath)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "adb",
+                Arguments = "exec-out screencap -p",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (var process = new Process { StartInfo = startInfo })
+            {
+                process.Start();
+
+                using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+                {
+                    process.StandardOutput.BaseStream.CopyTo(fs);
+                }
+
+                process.WaitForExit(); // đợi process kết thúc
+            }
+        }
+        public static Bitmap LoadImage(string path)
+        {
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                return new Bitmap(fs);
+            }
+        }
         void Auto()
         {
             var i = 0;
@@ -68,13 +100,16 @@ namespace AutoEqlink
                 {
                     Task t = new Task(async () =>
                     {
+                        int index = 0;
                         while (isStop == false)
                         {
                             int totalhosre = int.Parse(txtTotalHorse.Text);
-
-                            ADBHelper.ScreenShoot(device, false, "front.jpg");
-                            lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "screen shot Front"));
-                           
+                            string saveFolder = Directory.GetCurrentDirectory() + "\\InputImage\\";
+                            string fileName = Path.Combine(saveFolder, $"front.jpg");
+                            CaptureScreen(fileName);
+                           // ADBHelper.ScreenShoot(device, false, "front.jpg");
+                            lblActivity.Invoke((MethodInvoker)(() => lblActivity.Text = "screen shot Front: " + index));
+                            index++;
                             delay(3);
                         }
                     });
@@ -135,7 +170,7 @@ namespace AutoEqlink
             try
             {
                 // Crop vùng màu đỏ (tọa độ x, y, width, height)
-                Rectangle cropArea = new Rectangle(1800, 250, 350, 3400);
+                Rectangle cropArea = new Rectangle(1800, 100, 350, 3600);
                 // 👉 bạn tự chỉnh lại cho đúng với vùng đỏ
 
                 if(imagePath == "./InputImage/end.jpg")
@@ -146,8 +181,26 @@ namespace AutoEqlink
                 {
                     cropArea = new Rectangle(620, 320, 270, 1200);
                 }
-                Bitmap src = new Bitmap(imagePath);
-                Bitmap cropped = src.Clone(cropArea, src.PixelFormat);
+                Bitmap bmp1, bmp2;
+                using (var fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    using (var img = Image.FromStream(fs))
+                    {
+                        // Cách 1: Ép kiểu trực tiếp (nếu chắc chắn img là Bitmap)
+                        bmp1 = new Bitmap(img);
+
+                        // Cách 2: Clone ra bitmap mới (an toàn hơn, tránh lock stream)
+                        bmp2 = new Bitmap(img.Width, img.Height, img.PixelFormat);
+                        using (Graphics g = Graphics.FromImage(bmp2))
+                        {
+                            g.DrawImage(img, 0, 0, img.Width, img.Height);
+                        }
+
+                        // giờ bạn có bmp1 hoặc bmp2 để xử lý OCR
+                    }
+                }
+                //Bitmap src = new Bitmap(imagePath);
+                Bitmap cropped = bmp2.Clone(cropArea, bmp2.PixelFormat);
 
                 // Lưu ảnh crop ra file mới (PNG hoặc JPG tuỳ chọn)
                 string savePath = @"InputImage\cropped1.png";
@@ -165,6 +218,14 @@ namespace AutoEqlink
                 foreach (string line in rawData.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     string trimmed = line.Trim();
+                    if(trimmed == "Wing")
+                    {
+                        odds = ParseOddsList(rawData);                      
+                        if (odds.Count > 0)
+                        {
+                            return odds;
+                        }
+                    }
                     if (trimmed.Equals("Scratched", StringComparison.OrdinalIgnoreCase))
                     {                     
                         string win = "SCR";
@@ -174,7 +235,7 @@ namespace AutoEqlink
                   
 
 
-                     string[] parts = trimmed.Split(' ', (char)StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = trimmed.Split(' ', (char)StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
                         if (double.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double win) &&
@@ -216,9 +277,53 @@ namespace AutoEqlink
             {
                 Console.WriteLine("❌ OCR lỗi:");
                 Console.WriteLine(ex.ToString());
-                return null;
+                return new List<Odds>();
             }
-        }  
+        }
+        public static List<Odds> ParseOddsList(string rawText)
+        {
+            var lines = rawText
+                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .ToList();
+
+            int placeIndex = lines.FindIndex(l => l.StartsWith("Place", StringComparison.OrdinalIgnoreCase));
+
+            var winList = lines.Skip(1).Take(placeIndex - 1).ToList();
+            var placeList = lines.Skip(placeIndex + 1)
+                                 .TakeWhile(l => !(l.StartsWith("M ", StringComparison.OrdinalIgnoreCase) || l.Contains("RM")))
+                                 .ToList();
+
+            var result = new List<Odds>();
+            int count = Math.Min(winList.Count, placeList.Count);
+
+            for (int i = 0; i < count; i++)
+            {
+                string win = NormalizeValue(i < winList.Count ? winList[i] : "SCR");
+                string place = NormalizeValue(i < placeList.Count ? placeList[i] : "SCR");
+
+                result.Add(new Odds { Win = win, Place = place });
+            }
+
+            return result;
+        }
+
+       
+        // chuẩn hoá dữ liệu
+        private static string NormalizeValue(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return "SCR";
+
+            input = input.Trim();
+
+            if (input.Equals("Scratched", StringComparison.OrdinalIgnoreCase))
+                return "SCR";
+
+            return input;
+        }
+      
+
         bool isStopCap = false;
         private void btnCapture_Click(object sender, EventArgs e)
         {
@@ -259,9 +364,12 @@ namespace AutoEqlink
                        
                         List<LiveTote> _liveTote = new List<LiveTote>();
                         int totalHorse = int.Parse(txtTotalHorse.Text);
-                        if (listFront.Count == 0)
+                        if (listFront.Count == 0 || listFront == null)
                         {
-                            break;
+                            lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "Recall auto 5s"));
+                            delay(5);
+                            CaputerData();
+                            return;
                         }
                         var merged = new List<Odds>();
                         if (chkLDPlayer3.Checked)
@@ -296,14 +404,14 @@ namespace AutoEqlink
                             item.txday = item.RaceDay;
                             item.Win = (item.Win != "-1") ? ((float.Parse(item.Win) >= 999 || item.Win == "0") ? "999" : ParseWinPlace(item.Win)) : "-1";
                             item.Place = (item.Place != "-1") ? ((float.Parse(item.Place) >= 999 || item.Place == "0") ? "999" : ParseWinPlace(item.Place)) : "-1";
-                            ///lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + "-Place: " + item.Place));
-                            //delay(1);
+                            lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + "-Place: " + item.Place));
+                            delay(1);
                         }
-                        lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "Save data to livetote"));
-                        delay(2);
-                        if (listtest.Count >0)
+                        //lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "Save data to livetote"));
+                        //delay(1);
+                        if (listtest.Count == totalHorse)
                         {
-                            dal.SaveLiveToteList(listtest);
+                            //dal.SaveLiveToteList(listtest);
                         }
                         
                     }
@@ -312,11 +420,12 @@ namespace AutoEqlink
             }
             catch ( Exception ex)
             {
-                btnCapture.Text = "Stop Capture";
+                btnCapture.Text = "Stop Capture";                
                 clickRun1 = false;
                 isStopCap = true;
             }
         }
+      
         public static List<Odds> MergeOdds(List<Odds> list1, List<Odds> list2, int total)
         {
             var result = new List<Odds>(capacity: total);
@@ -393,7 +502,8 @@ namespace AutoEqlink
                 if (val >= 999)
                     return "999";
 
-                return ((val * 10) / 2).ToString();
+                int result = (int)((val * 10) / 2); // lấy phần nguyên
+                return result.ToString();
             }
 
             // Trường hợp OCR đọc ra dấu "-" hay ký tự lạ thì trả về -1
