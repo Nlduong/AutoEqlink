@@ -404,14 +404,14 @@ namespace AutoEqlink
                             item.txday = item.RaceDay;
                             item.Win = (item.Win != "-1") ? ((float.Parse(item.Win) >= 999 || item.Win == "0") ? "999" : ParseWinPlace(item.Win)) : "-1";
                             item.Place = (item.Place != "-1") ? ((float.Parse(item.Place) >= 999 || item.Place == "0") ? "999" : ParseWinPlace(item.Place)) : "-1";
-                            lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + "-Place: " + item.Place));
-                            delay(1);
+                            //lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + "-Place: " + item.Place));
+                            //delay(1);
                         }
-                        //lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "Save data to livetote"));
-                        //delay(1);
+                        lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "Save data to livetote"));
+                        delay(1);
                         if (listtest.Count == totalHorse)
                         {
-                            //dal.SaveLiveToteList(listtest);
+                            dal.SaveLiveToteList(listtest);
                         }
                         
                     }
@@ -502,8 +502,14 @@ namespace AutoEqlink
                 if (val >= 999)
                     return "999";
 
-                int result = (int)((val * 10) / 2); // lấy phần nguyên
-                return result.ToString();
+                string result =((val * 10) / 2).ToString(); // lấy phần nguyên
+                if (result.IndexOf(".") >-1)
+                {
+                    var res = result.Split('.');
+                    return res[0];
+                }
+                else
+                    return result;
             }
 
             // Trường hợp OCR đọc ra dấu "-" hay ký tự lạ thì trả về -1
