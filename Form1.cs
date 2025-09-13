@@ -404,8 +404,13 @@ namespace AutoEqlink
                             item.txday = item.RaceDay;
                             item.Win = (item.Win != "-1") ? ((float.Parse(item.Win) >= 999 || item.Win == "0") ? "999" : ParseWinPlace(item.Win)) : "-1";
                             item.Place = (item.Place != "-1") ? ((float.Parse(item.Place) >= 999 || item.Place == "0") ? "999" : ParseWinPlace(item.Place)) : "-1";
-                            //lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + "-Place: " + item.Place));
-                            //delay(1);
+                            //if(int.Parse(item.Win) >= 100 || int.Parse(item.Place) >= 100)
+                            //{
+                               // lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + " - Place: " + item.Place));
+                               // delay(1);
+                           // }
+
+
                         }
                         lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "Save data to livetote"));
                         delay(1);
@@ -438,7 +443,7 @@ namespace AutoEqlink
                     {
                         string win = list1[i].Win;
                         string place = list1[i].Place;
-                        result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
+                        result.Add(new Odds { Win = win, Place = place});
                     }
                 }
 
@@ -450,7 +455,7 @@ namespace AutoEqlink
                    
                         string win = list1[i].Win;
                         string place = list1[i].Place;
-                        result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
+                        result.Add(new Odds { Win = win, Place = place });
                 }
 
                 for (int j = 0; j < total - (list1.Count); j++)
@@ -459,7 +464,7 @@ namespace AutoEqlink
                     int index = list2.Count - (total - list1.Count) + j;
                     string win = list2[index].Win;
                     string place = list2[index].Place;
-                    result.Add(new Odds { Win = NormalizeNumber(win), Place = NormalizeNumber(place) });
+                    result.Add(new Odds { Win = win, Place = place });
                 }
             }
 
@@ -477,8 +482,8 @@ namespace AutoEqlink
 
             // bỏ ký tự lạ, giữ số và dấu chấm
             var cleaned = "";
-            foreach (char c in s)
-                if (char.IsDigit(c) || c == '.') cleaned += c;
+            //foreach (char c in s)
+            //    if (char.IsDigit(c) || c == '.') cleaned += c;
 
             if (string.IsNullOrEmpty(cleaned)) return "SCR";
 
