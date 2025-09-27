@@ -300,10 +300,20 @@ namespace AutoEqlink
 
             for (int i = 0; i < count; i++)
             {
-                string win = NormalizeValue(i < winList.Count ? winList[i] : "SCR");
-                string place = NormalizeValue(i < placeList.Count ? placeList[i] : "SCR");
+                string win = "";
+                string place = "";
+                if (winList.Count > placeList.Count)
+                {
+                     win = NormalizeValue(i+1 < winList.Count ? winList[i+1] : "SCR");
+                     place = NormalizeValue(i < placeList.Count ? placeList[i] : "SCR");
+                }
+                else
+                {
+                     win = NormalizeValue(i < winList.Count ? winList[i] : "SCR");
+                     place = NormalizeValue(i < placeList.Count ? placeList[i] : "SCR");
+                }
 
-                result.Add(new Odds { Win = win, Place = place });
+                 result.Add(new Odds { Win = win, Place = place });
             }
 
             return result;
@@ -406,8 +416,8 @@ namespace AutoEqlink
                             item.Place = (item.Place != "-1") ? ((float.Parse(item.Place) >= 999 || item.Place == "0") ? "999" : ParseWinPlace(item.Place)) : "-1";
                             //if(int.Parse(item.Win) >= 100 || int.Parse(item.Place) >= 100)
                             //{
-                               // lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + " - Place: " + item.Place));
-                               // delay(1);
+                                //lblTotalList.Invoke((MethodInvoker)(() => lblTotalList.Text = "RaceNo: " + item.RaceNo + "  Win:" + item.Win + " - Place: " + item.Place));
+                                //delay(1);
                            // }
 
 
