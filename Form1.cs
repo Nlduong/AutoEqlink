@@ -302,7 +302,7 @@ namespace AutoEqlink
             {
                 string win = "";
                 string place = "";
-                if (winList.Count > placeList.Count)
+                if (winList.Count > placeList.Count && winList[winList.Count-1].IndexOf('m') ==-1)
                 {
                      win = NormalizeValue(i+1 < winList.Count ? winList[i+1] : "SCR");
                      place = NormalizeValue(i < placeList.Count ? placeList[i] : "SCR");
